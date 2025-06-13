@@ -42,3 +42,17 @@ make up
 * http://localhost:8081/orders - Order Service
 * http://localhost:8082/identity - Identity Service
 * http://localhost:8083/basket - Basket Service
+5. Test to get config properties:
+```bash
+curl -X GET http://localhost:8070/products/default
+curl -X GET http://localhost:8070/order/default
+curl -X GET http://localhost:8070/identity/default
+curl -X GET http://localhost:8070/basket/default
+```
+6. Test certain microservice:
+```bash
+curl -X GET http://localhost:8080/products/contact-info
+curl -X GET http://localhost:8081/orders/contact-info
+curl -X GET http://localhost:8082/identity/contact-info
+curl -X GET http://localhost:8083/basket/contact-info
+```
