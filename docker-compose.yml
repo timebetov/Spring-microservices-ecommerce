@@ -16,6 +16,26 @@ services:
       file: common-config.yml
       service: network-deploy-service
 
+  productsdb:
+    container_name: products-db
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: products
+    extends:
+      file: common-config.yml
+      service: microservice-db-config
+
+  ordersdb:
+    container_name: orders-db
+    ports:
+      - 3307:3306
+    environment:
+      MYSQL_DATABASE: orders
+    extends:
+      file: common-config.yml
+      service: microservice-db-config
+
   configserver:
     image: "timebetov/configserver"
     container_name: configserver-ms
@@ -25,6 +45,7 @@ services:
       rabbitmq:
         condition: service_healthy
     environment:
+      SERVER_PORT: 8070
       SPRING_APPLICATION_NAME: "configserver"
       SPRING_CLOUD_CONFIG_SERVER_GIT_URI: ${GIT_CONFIG_URI}
       CRYPTO_KEY: ${CRYPTO_KEY}
@@ -44,10 +65,14 @@ services:
     ports:
       - "8080:8080"
     depends_on:
+      productsdb:
+        condition: service_healthy
       configserver:
         condition: service_healthy
     environment:
+      SERVER_PORT: 8080
       SPRING_APPLICATION_NAME: "products"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://productsdb:3306/products"
     extends:
       file: common-config.yml
       service: microservice-configserver-config
@@ -58,10 +83,14 @@ services:
     ports:
       - "8081:8081"
     depends_on:
+      ordersdb:
+        condition: service_healthy
       configserver:
         condition: service_healthy
     environment:
+      SERVER_PORT: 8081
       SPRING_APPLICATION_NAME: "order"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://ordersdb:3306/orders"
     extends:
       file: common-config.yml
       service: microservice-configserver-config
@@ -75,6 +104,7 @@ services:
       configserver:
         condition: service_healthy
     environment:
+      SERVER_PORT: 8082
       SPRING_APPLICATION_NAME: "identity"
     extends:
       file: common-config.yml
@@ -89,6 +119,7 @@ services:
       configserver:
         condition: service_healthy
     environment:
+      SERVER_PORT: 8083
       SPRING_APPLICATION_NAME: "basket"
     extends:
       file: common-config.yml
