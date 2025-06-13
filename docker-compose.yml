@@ -1,0 +1,99 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: ecommerce-rabbitmq
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_connectivity
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
+
+  configserver:
+    image: "timebetov/configserver"
+    container_name: configserver-ms
+    ports:
+      - "8070:8070"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "configserver"
+      SPRING_CLOUD_CONFIG_SERVER_GIT_URI: ${GIT_CONFIG_URI}
+      CRYPTO_KEY: ${CRYPTO_KEY}
+    healthcheck:
+      test: "curl --fail --silent localhost:8070/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    extends:
+      file: common-config.yml
+      service: microservice-base-config
+
+  productservice:
+    image: "timebetov/productservice"
+    container_name: products-ms
+    ports:
+      - "8080:8080"
+    depends_on:
+      configserver:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "products"
+    extends:
+      file: common-config.yml
+      service: microservice-configserver-config
+
+  orderservice:
+    image: "timebetov/orderservice"
+    container_name: orders-ms
+    ports:
+      - "8081:8081"
+    depends_on:
+      configserver:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "order"
+    extends:
+      file: common-config.yml
+      service: microservice-configserver-config
+
+  identityservice:
+    image: "timebetov/identityservice"
+    container_name: identity-ms
+    ports:
+      - "8082:8082"
+    depends_on:
+      configserver:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "identity"
+    extends:
+      file: common-config.yml
+      service: microservice-configserver-config
+
+  basketservice:
+    image: "timebetov/basketservice"
+    container_name: basket-ms
+    ports:
+      - "8083:8083"
+    depends_on:
+      configserver:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "basket"
+    extends:
+      file: common-config.yml
+      service: microservice-configserver-config
+
+networks:
+  ecommerce:
+    driver: bridge
