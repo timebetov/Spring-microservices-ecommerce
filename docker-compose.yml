@@ -36,9 +36,9 @@ services:
       file: common-config.yml
       service: microservice-db-config
 
-  configserver:
-    image: "timebetov/configserver"
-    container_name: configserver-ms
+  configservice:
+    image: "timebetov/config-service"
+    container_name: config-service-ms
     ports:
       - "8070:8070"
     depends_on:
@@ -46,7 +46,7 @@ services:
         condition: service_healthy
     environment:
       SERVER_PORT: 8070
-      SPRING_APPLICATION_NAME: "configserver"
+      SPRING_APPLICATION_NAME: "configservice"
       SPRING_CLOUD_CONFIG_SERVER_GIT_URI: ${GIT_CONFIG_URI}
       CRYPTO_KEY: ${CRYPTO_KEY}
     healthcheck:
@@ -59,71 +59,93 @@ services:
       file: common-config.yml
       service: microservice-base-config
 
-  productservice:
-    image: "timebetov/productservice"
-    container_name: products-ms
+  discoveryservice:
+    image: "timebetov/eureka-service"
+    container_name: discovery-service-ms
     ports:
       - "8080:8080"
     depends_on:
-      productsdb:
-        condition: service_healthy
-      configserver:
+      configservice:
         condition: service_healthy
     environment:
       SERVER_PORT: 8080
+      SPRING_APPLICATION_NAME: "eurekaservice"
+      SPRING_CONFIG_IMPORT: configserver:http://configservice:8070
+    healthcheck:
+      test: "curl --fail -silent localhost:8080/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    extends:
+      file: common-config.yml
+      service: microservice-base-config
+
+  productservice:
+    image: "timebetov/products-service"
+    container_name: products-ms
+    ports:
+      - "8084:8084"
+    depends_on:
+      productsdb:
+        condition: service_healthy
+      discoveryservice:
+        condition: service_healthy
+    environment:
+      SERVER_PORT: 8084
       SPRING_APPLICATION_NAME: "products"
       SPRING_DATASOURCE_URL: "jdbc:mysql://productsdb:3306/products"
     extends:
       file: common-config.yml
-      service: microservice-configserver-config
+      service: microservice-configservice-config
 
   orderservice:
-    image: "timebetov/orderservice"
+    image: "timebetov/orders-service"
     container_name: orders-ms
     ports:
       - "8081:8081"
     depends_on:
       ordersdb:
         condition: service_healthy
-      configserver:
+      discoveryservice:
         condition: service_healthy
     environment:
       SERVER_PORT: 8081
-      SPRING_APPLICATION_NAME: "order"
+      SPRING_APPLICATION_NAME: "orders"
       SPRING_DATASOURCE_URL: "jdbc:mysql://ordersdb:3306/orders"
     extends:
       file: common-config.yml
-      service: microservice-configserver-config
+      service: microservice-configservice-config
 
   identityservice:
-    image: "timebetov/identityservice"
+    image: "timebetov/identity-service"
     container_name: identity-ms
     ports:
       - "8082:8082"
     depends_on:
-      configserver:
+      discoveryservice:
         condition: service_healthy
     environment:
       SERVER_PORT: 8082
       SPRING_APPLICATION_NAME: "identity"
     extends:
       file: common-config.yml
-      service: microservice-configserver-config
+      service: microservice-configservice-config
 
   basketservice:
-    image: "timebetov/basketservice"
+    image: "timebetov/basket-service"
     container_name: basket-ms
     ports:
       - "8083:8083"
     depends_on:
-      configserver:
+      discoveryservice:
         condition: service_healthy
     environment:
       SERVER_PORT: 8083
       SPRING_APPLICATION_NAME: "basket"
     extends:
       file: common-config.yml
-      service: microservice-configserver-config
+      service: microservice-configservice-config
 
 networks:
   ecommerce:

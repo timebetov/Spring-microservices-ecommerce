@@ -26,16 +26,21 @@ services:
     environment:
       SPRING_RABBITMQ_HOST: "rabbitmq"
       MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "*"
+      LOGGING_PATTERN_CONSOLE: "%green(%d{HH:mm:ss.SSS}) %blue(%-5level) %red([%thread]) %yellow(%logger{15}) - %msg%n"
 
-  microservice-configserver-config:
+  microservice-configservice-config:
     extends:
       service: microservice-base-config
     environment:
       SPRING_PROFILES_ACTIVE: default
-      SPRING_CONFIG_IMPORT: configserver:http://configserver:8070
+      SPRING_CONFIG_IMPORT: configserver:http://configservice:8070
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL: "true"
       SPRING_JPA_SHOW_SQL: "true"
+      MANAGEMENT_INFO_ENV_ENABLED: "true"
+      MANAGEMENT_ENDPOINT_SHUTDOWN_ACCESS: unrestricted
+      EUREKA_HOST: discoveryservice
+      EUREKA_SERVER_PORT: 8080

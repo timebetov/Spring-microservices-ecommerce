@@ -1,4 +1,4 @@
-SERVICES = basketservice configserver identityservice orderservice productservice
+SERVICES = config-service eureka-service basket-service identity-service orders-service products-service
 
 .PHONY: build
 build:

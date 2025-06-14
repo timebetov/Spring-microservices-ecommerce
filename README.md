@@ -15,11 +15,16 @@ products:
     name: "<your_name>"
     email: "<your_email>"
 ```
-4. Install [HookDeck CLI](https://hookdeck.com/docs/cli#installation) and follow instructions
-5. Run the `hookdeck listen 8070 --cli-path /monitor` command in your shell after you started application
-6. Copy the link `hookdeck` generated
-7. In config repository go to --> `Settings` --> `WebHooks` --> `Add webhook` and paste your link to `Payload URL` with Content type `application/json`
-8. In `.env` file paste your URL with property name `GIT_CONFIG_URI`
+4. In `.env` file paste your URL with property name `GIT_CONFIG_URI`
+
+## 1. Update properties manually
+> You have to manually invoke `/busRefresh` in one of microservices after each update.
+
+## 2. Update properties automatically
+1. Install [HookDeck CLI](https://hookdeck.com/docs/cli#installation) and follow instructions
+2. Run the `hookdeck listen 8070 --cli-path /monitor` command in your shell after you started application
+3. Copy the link `hookdeck` generated
+4. In config repository go to --> `Settings` --> `WebHooks` --> `Add webhook` and paste your link to `Payload URL` with Content type `application/json`
 > When you will make updates in your config files, it will automatically update application properties.
 
 # How to run
@@ -38,10 +43,11 @@ make up
 ```
 4. The application will be available at:
 * http://localhost:8070/ - Config Server
-* http://localhost:8080/products - Products Service
+* http://localhost:8080/ - Eureka Server
 * http://localhost:8081/orders - Order Service
 * http://localhost:8082/identity - Identity Service
 * http://localhost:8083/basket - Basket Service
+* http://localhost:8084/products - Products Service
 5. Test to get config properties:
 ```bash
 curl -X GET http://localhost:8070/products/default
@@ -51,8 +57,8 @@ curl -X GET http://localhost:8070/basket/default
 ```
 6. Test certain microservice:
 ```bash
-curl -X GET http://localhost:8080/products/contact-info
 curl -X GET http://localhost:8081/orders/contact-info
 curl -X GET http://localhost:8082/identity/contact-info
 curl -X GET http://localhost:8083/basket/contact-info
+curl -X GET http://localhost:8084/products/contact-info
 ```
