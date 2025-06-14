@@ -70,7 +70,6 @@ services:
     environment:
       SERVER_PORT: 8080
       SPRING_APPLICATION_NAME: "eurekaservice"
-      SPRING_CONFIG_IMPORT: configserver:http://configservice:8070
     healthcheck:
       test: "curl --fail -silent localhost:8080/actuator/health/readiness | grep UP || exit 1"
       interval: 10s
@@ -79,7 +78,7 @@ services:
       start_period: 10s
     extends:
       file: common-config.yml
-      service: microservice-base-config
+      service: microservice-configservice-config
 
   productservice:
     image: "timebetov/products-service"
@@ -97,7 +96,7 @@ services:
       SPRING_DATASOURCE_URL: "jdbc:mysql://productsdb:3306/products"
     extends:
       file: common-config.yml
-      service: microservice-configservice-config
+      service: microservice-eureka-config
 
   orderservice:
     image: "timebetov/orders-service"
@@ -115,7 +114,7 @@ services:
       SPRING_DATASOURCE_URL: "jdbc:mysql://ordersdb:3306/orders"
     extends:
       file: common-config.yml
-      service: microservice-configservice-config
+      service: microservice-eureka-config
 
   identityservice:
     image: "timebetov/identity-service"
@@ -130,7 +129,7 @@ services:
       SPRING_APPLICATION_NAME: "identity"
     extends:
       file: common-config.yml
-      service: microservice-configservice-config
+      service: microservice-eureka-config
 
   basketservice:
     image: "timebetov/basket-service"
@@ -145,7 +144,7 @@ services:
       SPRING_APPLICATION_NAME: "basket"
     extends:
       file: common-config.yml
-      service: microservice-configservice-config
+      service: microservice-eureka-config
 
 networks:
   ecommerce:
