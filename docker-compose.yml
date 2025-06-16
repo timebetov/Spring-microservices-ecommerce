@@ -63,15 +63,15 @@ services:
     image: "timebetov/eureka-service"
     container_name: discovery-service-ms
     ports:
-      - "8080:8080"
+      - "8071:8071"
     depends_on:
       configservice:
         condition: service_healthy
     environment:
-      SERVER_PORT: 8080
+      SERVER_PORT: 8071
       SPRING_APPLICATION_NAME: "eurekaservice"
     healthcheck:
-      test: "curl --fail -silent localhost:8080/actuator/health/readiness | grep UP || exit 1"
+      test: "curl --fail -silent localhost:8071/actuator/health/readiness | grep UP || exit 1"
       interval: 10s
       timeout: 5s
       retries: 10
@@ -145,6 +145,27 @@ services:
     extends:
       file: common-config.yml
       service: microservice-eureka-config
+
+  gatewayservice:
+    image: "timebetov/gateway-service"
+    container_name: gateway-ms
+    ports:
+      - "8080:8080"
+    depends_on:
+      - productservice
+      - ordersdb
+      - identityservice
+      - basketservice
+    environment:
+      SERVER_PORT: 8080
+      SPRING_APPLICATION_NAME: "gatewayservice"
+      MANAGEMENT_INFO_ENV_ENABLED: "true"
+      MANAGEMENT_ENDPOINT_GATEWAY_ACCESS: unrestricted
+      EUREKA_HOST: discoveryservice
+      EUREKA_SERVER_PORT: 8071
+    extends:
+      file: common-config.yml
+      service: microservice-configservice-config
 
 networks:
   ecommerce:

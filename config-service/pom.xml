@@ -68,7 +68,7 @@
 						<image>timebetov/${project.artifactId}</image>
 					</to>
 					<container>
-						<mainClass>com.github.timebetov.configserver.ConfigServerApplication</mainClass>
+						<mainClass>com.github.timebetov.configservice.ConfigServerApplication</mainClass>
 					</container>
 				</configuration>
 			</plugin>

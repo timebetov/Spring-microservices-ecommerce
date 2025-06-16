@@ -1,0 +1,22 @@
+spring:
+  cloud:
+    gateway:
+      server:
+        webflux:
+          discovery:
+            locator:
+              enabled: true
+              lowerCaseServiceId: true
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    serviceUrl:
+      defaultZone: http://${EUREKA_HOST:localhost}:${EUREKA_SERVER_PORT:8080}/eureka
+
+info:
+  app:
+    name: ${SPRING_APPLICATION_NAME}
+    description: Microservices-based backend system for E-Commerce Online Shop - ${SPRING_APPLICATION_NAME} Service
+    version: "1.0.0"

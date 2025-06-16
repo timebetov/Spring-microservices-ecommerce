@@ -1,4 +1,4 @@
-SERVICES = config-service eureka-service basket-service identity-service orders-service products-service
+SERVICES = config-service eureka-service basket-service identity-service orders-service products-service gateway-service
 
 .PHONY: build
 build:
@@ -8,6 +8,9 @@ build:
 	done
 
 up: build
+	docker compose up -d
+
+start:
 	docker compose up -d
 
 down:

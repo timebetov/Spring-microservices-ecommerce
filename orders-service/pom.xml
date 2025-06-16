@@ -115,7 +115,7 @@
 						<image>timebetov/${project.artifactId}</image>
 					</to>
 					<container>
-						<mainClass>com.github.timebetov.orderservice.OrderserviceApplication</mainClass>
+						<mainClass>com.github.timebetov.ordersservice.OrderserviceApplication</mainClass>
 					</container>
 				</configuration>
 			</plugin>

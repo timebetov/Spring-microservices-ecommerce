@@ -1,10 +1,10 @@
-package com.github.timebetov.eureka_server;
+package com.github.timebetov.ordersservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class EurekaServerApplicationTests {
+class OrderserviceApplicationTests {
 
 	@Test
 	void contextLoads() {

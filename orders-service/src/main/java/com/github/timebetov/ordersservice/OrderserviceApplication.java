@@ -1,6 +1,6 @@
-package com.github.timebetov.orderservice;
+package com.github.timebetov.ordersservice;
 
-import com.github.timebetov.orderservice.dto.OrderContactInfoDto;
+import com.github.timebetov.ordersservice.dto.OrderContactInfoDto;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

@@ -1,4 +1,4 @@
-package com.github.timebetov.orderservice.dto;
+package com.github.timebetov.ordersservice.dto;
 
 import lombok.Getter;
 import lombok.Setter;
