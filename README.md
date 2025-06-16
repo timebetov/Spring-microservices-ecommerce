@@ -1,5 +1,5 @@
 # E-Commerce Online Shop
-E-Commerce online shop application on microservices architecture. Application builds docker images using Google Jib library.
+E-Commerce online shop application on microservices architecture. Application builds docker images using Google Jib plugin.
 
 # Config Server
 1. Create public git repository.
@@ -9,7 +9,7 @@ E-Commerce online shop application on microservices architecture. Application bu
 build:
   version: <your_version>
 
-products:
+<MICROSERVICE_NAME>:
   message: <some_message>
   contactDetails:
     name: "<your_name>"
@@ -43,7 +43,8 @@ make up
 ```
 4. The application will be available at:
 * http://localhost:8070/ - Config Server
-* http://localhost:8080/ - Eureka Server
+* http://localhost:8071/ - Eureka Server
+* http://localhost:8080/ - Gateway Server
 * http://localhost:8081/orders - Order Service
 * http://localhost:8082/identity - Identity Service
 * http://localhost:8083/basket - Basket Service
@@ -57,8 +58,8 @@ curl -X GET http://localhost:8070/basket/default
 ```
 6. Test certain microservice:
 ```bash
-curl -X GET http://localhost:8081/orders/contact-info
-curl -X GET http://localhost:8082/identity/contact-info
-curl -X GET http://localhost:8083/basket/contact-info
-curl -X GET http://localhost:8084/products/contact-info
+curl -X GET http://localhost:8080/ecommerce/orders/actuator/info
+curl -X GET http://localhost:8080/ecommerce/identity/actuator/info
+curl -X GET http://localhost:8080/ecommerce/basket/actuator/info
+curl -X GET http://localhost:8080/ecommerce/products/actuator/info
 ```
