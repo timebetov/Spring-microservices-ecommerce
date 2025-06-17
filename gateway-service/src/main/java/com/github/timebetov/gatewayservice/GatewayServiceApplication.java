@@ -18,7 +18,11 @@ public class GatewayServiceApplication {
 		return routeLocatorBuilder.routes()
 				.route(p -> p
 						.path("/ecommerce/products/**")
-						.filters(f -> f.rewritePath("/ecommerce/products/(?<segment>.*)", "/${segment}"))
+						.filters(f -> f
+								.rewritePath("/ecommerce/products/(?<segment>.*)", "/${segment}")
+								.circuitBreaker(config -> config
+										.setName("productsCB")
+										.setFallbackUri("forward:/contactSupport")))
 						.uri("lb://PRODUCTS"))
 				.route(p -> p
 						.path("/ecommerce/orders/**")

@@ -20,3 +20,11 @@ info:
     name: ${SPRING_APPLICATION_NAME}
     description: Microservices-based backend system for E-Commerce Online Shop - ${SPRING_APPLICATION_NAME} Service
     version: "1.0.0"
+
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      slidingWindowSize: 10
+      permittedNumberOfCallsInHalfOpenState: 2
+      failureRateThreshold: 50
+      waitDurationInOpenState: 10000
