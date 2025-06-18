@@ -36,6 +36,18 @@ services:
       file: common-config.yml
       service: microservice-db-config
 
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - 6379:6379
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli ping | grep PONG" ]
+      timeout: 10s
+      retries: 5
+    networks:
+      - ecommerce
+
   configservice:
     image: "timebetov/config-service"
     container_name: config-service-ms
@@ -159,6 +171,7 @@ services:
     environment:
       SERVER_PORT: 8080
       SPRING_APPLICATION_NAME: "gatewayservice"
+      REDIS_HOST: redis
       MANAGEMENT_INFO_ENV_ENABLED: "true"
       MANAGEMENT_ENDPOINT_GATEWAY_ACCESS: unrestricted
       EUREKA_HOST: discoveryservice

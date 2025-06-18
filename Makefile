@@ -1,5 +1,5 @@
 SERVICES = config-service eureka-service basket-service identity-service orders-service products-service gateway-service
-INFRA_SERVICES = ecommerce-rabbitmq products-db orders-db
+INFRA_SERVICES = ecommerce-rabbitmq products-db orders-db redis
 
 .PHONY: build
 build:
