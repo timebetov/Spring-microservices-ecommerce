@@ -1,0 +1,41 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: ecommerce-rabbitmq
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_connectivity
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
+
+  productsdb:
+    container_name: products-db
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: products
+    extends:
+      file: common-config.yml
+      service: microservice-db-config
+
+  ordersdb:
+    container_name: orders-db
+    ports:
+      - 3307:3306
+    environment:
+      MYSQL_DATABASE: orders
+    extends:
+      file: common-config.yml
+      service: microservice-db-config
+
+networks:
+  ecommerce:
+    driver: bridge
