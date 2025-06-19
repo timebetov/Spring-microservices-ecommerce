@@ -49,6 +49,8 @@ make up
 * http://localhost:8082/identity - Identity Service
 * http://localhost:8083/basket - Basket Service
 * http://localhost:8084/products - Products Service
+* http://localhost:3000/ - Grafana
+* http://localhost:9090/ - Prometheus
 5. Test to get config properties:
 ```bash
 curl -X GET http://localhost:8070/products/default
