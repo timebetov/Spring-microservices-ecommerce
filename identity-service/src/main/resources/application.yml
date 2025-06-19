@@ -4,6 +4,11 @@ info:
     description: "Microservices-based backend system for E-Commerce Online Shop - ${spring.application.name} Service"
     version: "1.0.0"
 
+management:
+  metrics:
+    tags:
+      application: ${SPRING_APPLICATION_NAME}
+
 eureka:
   instance:
     preferIpAddress: true

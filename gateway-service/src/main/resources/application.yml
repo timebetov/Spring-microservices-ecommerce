@@ -17,6 +17,11 @@ spring:
       port: 6379
       timeout: 1s
 
+management:
+  metrics:
+    tags:
+      application: ${SPRING_APPLICATION_NAME}
+
 eureka:
   instance:
     preferIpAddress: true

@@ -9,7 +9,7 @@ build:
 	done
 
 dev:
-	docker compose -f docker-compose.dev.yml up -d
+	docker compose -f docker-compose.base.yml up -d
 	@$(MAKE) wait-infra
 
 wait-infra:
@@ -25,10 +25,19 @@ wait-infra:
 	@echo "✅ All infrastructure services are healthy and ready!"
 
 up: build
-	docker compose up -d
+	docker compose \
+		-f docker-compose.base.yml \
+		-f docker-compose.ops.yml \
+		-f docker-compose.services.yml up -d
 
 start:
-	docker compose up -d
+	docker compose \
+		-f docker-compose.base.yml \
+		-f docker-compose.ops.yml \
+		-f docker-compose.services.yml up -d
 
 down:
-	docker compose down
+	docker compose \
+		-f docker-compose.base.yml \
+		-f docker-compose.ops.yml \
+		-f docker-compose.services.yml down

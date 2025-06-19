@@ -1,0 +1,34 @@
+global:
+  scrape_interval:     5s
+  evaluation_interval: 5s
+
+scrape_configs:
+  - job_name: productservice
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: [ productservice:8084 ]
+  - job_name: orderservice
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: [ orderservice:8081 ]
+  - job_name: identityservice
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: [ identityservice:8082 ]
+  - job_name: basketservice
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: [ basketservice:8083 ]
+  - job_name: gatewayservice
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: [ gatewayservice:8080 ]
+  - job_name: discoveryservice
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: [ discoveryservice:8071 ]
+  - job_name: configservice
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: [ configservice:8070 ]
+  
