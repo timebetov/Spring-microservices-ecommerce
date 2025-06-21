@@ -12,11 +12,12 @@ services:
       SPRING_APPLICATION_NAME: "configservice"
       SPRING_CLOUD_CONFIG_SERVER_GIT_URI: ${GIT_CONFIG_URI}
       CRYPTO_KEY: ${CRYPTO_KEY}
+      OTEL_SERVICE_NAME: "configservice"
     healthcheck:
       test: "curl --fail --silent localhost:8070/actuator/health/readiness | grep UP || exit 1"
-      interval: 10s
+      interval: 20s
       timeout: 5s
-      retries: 10
+      retries: 20
       start_period: 10s
     extends:
       file: common-config.yml
@@ -33,11 +34,12 @@ services:
     environment:
       SERVER_PORT: 8071
       SPRING_APPLICATION_NAME: "eurekaservice"
+      OTEL_SERVICE_NAME: "eurekaservice"
     healthcheck:
       test: "curl --fail -silent localhost:8071/actuator/health/readiness | grep UP || exit 1"
-      interval: 10s
+      interval: 20s
       timeout: 5s
-      retries: 10
+      retries: 20
       start_period: 10s
     extends:
       file: common-config.yml
@@ -48,6 +50,12 @@ services:
     container_name: products-ms
     ports:
       - "8084:8084"
+    healthcheck:
+      test: "curl --fail --silent localhost:8084/actuator/health/readiness | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
     depends_on:
       productsdb:
         condition: service_healthy
@@ -57,6 +65,7 @@ services:
       SERVER_PORT: 8084
       SPRING_APPLICATION_NAME: "products"
       SPRING_DATASOURCE_URL: "jdbc:mysql://productsdb:3306/products"
+      OTEL_SERVICE_NAME: "products"
     extends:
       file: common-config.yml
       service: microservice-eureka-config
@@ -66,6 +75,12 @@ services:
     container_name: orders-ms
     ports:
       - "8081:8081"
+    healthcheck:
+      test: "curl --fail --silent localhost:8081/actuator/health/readiness | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
     depends_on:
       ordersdb:
         condition: service_healthy
@@ -75,6 +90,7 @@ services:
       SERVER_PORT: 8081
       SPRING_APPLICATION_NAME: "orders"
       SPRING_DATASOURCE_URL: "jdbc:mysql://ordersdb:3306/orders"
+      OTEL_SERVICE_NAME: "orders"
     extends:
       file: common-config.yml
       service: microservice-eureka-config
@@ -84,12 +100,19 @@ services:
     container_name: identity-ms
     ports:
       - "8082:8082"
+    healthcheck:
+      test: "curl --fail --silent localhost:8082/actuator/health/readiness | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
     depends_on:
       discoveryservice:
         condition: service_healthy
     environment:
       SERVER_PORT: 8082
       SPRING_APPLICATION_NAME: "identity"
+      OTEL_SERVICE_NAME: "identity"
     extends:
       file: common-config.yml
       service: microservice-eureka-config
@@ -99,12 +122,19 @@ services:
     container_name: basket-ms
     ports:
       - "8083:8083"
+    healthcheck:
+      test: "curl --fail --silent localhost:8083/actuator/health/readiness | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
     depends_on:
       discoveryservice:
         condition: service_healthy
     environment:
       SERVER_PORT: 8083
       SPRING_APPLICATION_NAME: "basket"
+      OTEL_SERVICE_NAME: "basket"
     extends:
       file: common-config.yml
       service: microservice-eureka-config
@@ -114,11 +144,21 @@ services:
     container_name: gateway-ms
     ports:
       - "8080:8080"
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health/readiness | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
     depends_on:
-      - productservice
-      - ordersdb
-      - identityservice
-      - basketservice
+      productservice:
+        condition: service_healthy
+      orderservice:
+        condition: service_healthy
+      identityservice:
+        condition: service_healthy
+      basketservice:
+        condition: service_healthy
     environment:
       SERVER_PORT: 8080
       SPRING_APPLICATION_NAME: "gatewayservice"
@@ -127,6 +167,7 @@ services:
       MANAGEMENT_ENDPOINT_GATEWAY_ACCESS: unrestricted
       EUREKA_HOST: discoveryservice
       EUREKA_SERVER_PORT: 8071
+      OTEL_SERVICE_NAME: "gatewayservice"
     extends:
       file: common-config.yml
       service: microservice-configservice-config

@@ -11,6 +11,7 @@ build:
 dev:
 	docker compose -f docker-compose.base.yml up -d
 	@$(MAKE) wait-infra
+	@$(MAKE) alert-dev
 
 wait-infra:
 	@echo "⏳ Waiting for all infrastructure services to become healthy..."
@@ -29,15 +30,35 @@ up: build
 		-f docker-compose.base.yml \
 		-f docker-compose.ops.yml \
 		-f docker-compose.services.yml up -d
+	@$(MAKE) alert-started
 
 start:
 	docker compose \
 		-f docker-compose.base.yml \
 		-f docker-compose.ops.yml \
 		-f docker-compose.services.yml up -d
+	@$(MAKE) alert-started
 
 down:
 	docker compose \
 		-f docker-compose.base.yml \
 		-f docker-compose.ops.yml \
 		-f docker-compose.services.yml down
+
+alert-started:
+	@echo
+	@echo " ▗▄▄▖▗▄▄▄▖▗▄▖ ▗▄▄▖▗▄▄▄▖▗▄▄▄▖▗▄▄▄  "
+	@echo "▐▌     █ ▐▌ ▐▌▐▌ ▐▌ █  ▐▌   ▐▌  █ "
+	@echo " ▝▀▚▖  █ ▐▛▀▜▌▐▛▀▚▖ █  ▐▛▀▀▘▐▌  █ "
+	@echo "▗▄▄▞▘  █ ▐▌ ▐▌▐▌ ▐▌ █  ▐▙▄▄▖▐▙▄▄▀ "
+	@echo
+	@echo "✅ Services started successfully!"
+	@echo "🌐 Grafana:   http://localhost:3000"
+
+alert-dev:
+	@echo "▗▄▄▄  ▗▄▄▄▖▗▖  ▗▖▗▄▄▄▖▗▖    ▗▄▖ ▗▄▄▖ ▗▖  ▗▖▗▄▄▄▖▗▖  ▗▖▗▄▄▄▖    █     ▗▖  ▗▖ ▗▄▖ ▗▄▄▄  ▗▄▄▄▖"
+	@echo "▐▌  █ ▐▌   ▐▌  ▐▌▐▌   ▐▌   ▐▌ ▐▌▐▌ ▐▌▐▛▚▞▜▌▐▌   ▐▛▚▖▐▌  █      █     ▐▛▚▞▜▌▐▌ ▐▌▐▌  █ ▐▌   "
+	@echo "▐▌  █ ▐▛▀▀▘▐▌  ▐▌▐▛▀▀▘▐▌   ▐▌ ▐▌▐▛▀▘ ▐▌  ▐▌▐▛▀▀▘▐▌ ▝▜▌  █      █     ▐▌  ▐▌▐▌ ▐▌▐▌  █ ▐▛▀▀▘"
+	@echo "▐▙▄▄▀ ▐▙▄▄▖ ▝▚▞▘ ▐▙▄▄▖▐▙▄▄▖▝▚▄▞▘▐▌   ▐▌  ▐▌▐▙▄▄▖▐▌  ▐▌  █      █     ▐▌  ▐▌▝▚▄▞▘▐▙▄▄▀ ▐▙▄▄▖"
+	@echo
+	@echo "✅ Services started successfully!"
